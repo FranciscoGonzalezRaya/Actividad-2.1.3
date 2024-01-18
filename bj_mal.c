@@ -24,27 +24,6 @@ int NCartasJugador = 0;
 int sumJugador = 0;
 char eleccion;
 
-//Funcion: Iniciar Baraja
-void iniciarBaraja() {
-    for (int i = 0; i < TOTAL_CARTAS; i++) {
-        baraja[i].valor = valores[i % VALOR_CARTA];
-        baraja[i].palo = palos[i / VALOR_CARTA];
-        baraja[i].valorNumerico = (i % VALOR_CARTA) + 1;
-        if (baraja[i].valorNumerico > 10) baraja[i].valorNumerico = 10;
-        if (i % VALOR_CARTA == VALOR_CARTA - 1) baraja[i].valorNumerico = 11;
-    }
-}
-
-//Funcion: Barajar Baraja
-void barajarBaraja() {
-    srand(time(NULL));
-    for (int i = 0; i < TOTAL_CARTAS; i++) {
-        int j = rand() % TOTAL_CARTAS;
-        struct carta temp = baraja[i];
-        baraja[i] = baraja[j];
-        baraja[j] = temp;
-    }
-}
 
 //Funcion: Mostrar Carta
 void mostrarCarta(struct carta c) {
@@ -61,9 +40,23 @@ int sumMano(struct carta mano[], int numCards) {
 }
 
 int main() {
-//Utilizamos la funcion para iniciar baraja y otra para barajarla
-    iniciarBaraja();
-    barajarBaraja();
+//Iniciamos la baraja
+    for (int i = 0; i < TOTAL_CARTAS; i++) {
+        baraja[i].valor = valores[i % VALOR_CARTA];
+        baraja[i].palo = palos[i / VALOR_CARTA];
+        baraja[i].valorNumerico = (i % VALOR_CARTA) + 1;
+        if (baraja[i].valorNumerico > 10) baraja[i].valorNumerico = 10;
+        if (i % VALOR_CARTA == VALOR_CARTA - 1) baraja[i].valorNumerico = 11;
+    }
+
+//Barajar Baraja
+    srand(time(NULL));
+    for (int i = 0; i < TOTAL_CARTAS; i++) {
+        int j = rand() % TOTAL_CARTAS;
+        struct carta temp = baraja[i];
+        baraja[i] = baraja[j];
+        baraja[j] = temp;
+    }
 
     printf("Bienvenido al Blackjack!\n");
 
