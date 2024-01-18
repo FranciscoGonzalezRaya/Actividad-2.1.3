@@ -2,96 +2,96 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define TOTAL_CARDS 52
-#define CARD_VALUES 13
-#define MAX_HAND 10
+#define TOTAL_CARTAS 52
+#define VALOR_CARTA 13
+#define MAX_MANO 10
 
 // Representación de las cartas
-char *values[] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
-char *suits[] = {"Corazones", "Diamantes", "Picas", "Tréboles"};
+char *valores[] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+char *palos[] = {"Corazones", "Diamantes", "Picas", "Treboles"};
 
 // Estructura para una carta
 struct carta {
-    char *value;
-    char *suit;
-    int numericValue;
+    char *valor;
+    char *palo;
+    int valorNumerico;
 };
 
-struct carta deck[TOTAL_CARDS];
-struct carta playerHand[MAX_HAND];
-int numPlayerCards = 0;
-int playerSum = 0;
-char choice;
+struct carta baraja[TOTAL_CARTAS];
+struct carta manoJugador[MAX_MANO];
+int NCartasJugador = 0;
+int sumJugador = 0;
+char eleccion;
 
-void initializeDeck() {
-    for (int i = 0; i < TOTAL_CARDS; i++) {
-        deck[i].value = values[i % CARD_VALUES];
-        deck[i].suit = suits[i / CARD_VALUES];
-        deck[i].numericValue = (i % CARD_VALUES) + 1;
-        if (deck[i].numericValue > 10) deck[i].numericValue = 10;
-        if (i % CARD_VALUES == CARD_VALUES - 1) deck[i].numericValue = 11;
+void iniciarBaraja() {
+    for (int i = 0; i < TOTAL_CARTAS; i++) {
+        baraja[i].valor = valores[i % VALOR_CARTA];
+        baraja[i].palo = palos[i / VALOR_CARTA];
+        baraja[i].valorNumerico = (i % VALOR_CARTA) + 1;
+        if (baraja[i].valorNumerico > 10) baraja[i].valorNumerico = 10;
+        if (i % VALOR_CARTA == VALOR_CARTA - 1) baraja[i].valorNumerico = 11;
     }
 }
 
-void shuffleDeck() {
+void barajarBaraja() {
     srand(time(NULL));
-    for (int i = 0; i < TOTAL_CARDS; i++) {
-        int j = rand() % TOTAL_CARDS;
-        struct carta temp = deck[i];
-        deck[i] = deck[j];
-        deck[j] = temp;
+    for (int i = 0; i < TOTAL_CARTAS; i++) {
+        int j = rand() % TOTAL_CARTAS;
+        struct carta temp = baraja[i];
+        baraja[i] = baraja[j];
+        baraja[j] = temp;
     }
 }
 
-void showCard(struct carta c) {
-    printf("  %s de %s\n", c.value, c.suit);
+void mostrarCarta(struct carta c) {
+    printf("  %s de %s\n", c.valor, c.palo);
 }
 
-int sumHand(struct carta hand[], int numCards) {
+int sumMano(struct carta mano[], int numCards) {
     int sum = 0;
     for (int i = 0; i < numCards; i++) {
-        sum += hand[i].numericValue;
+        sum += mano[i].valorNumerico;
     }
     return sum;
 }
 
 int main() {
-    initializeDeck();
-    shuffleDeck();
+    iniciarBaraja();
+    barajarBaraja();
 
     printf("Bienvenido al Blackjack!\n");
 
-    playerHand[numPlayerCards++] = deck[0];
-    playerHand[numPlayerCards++] = deck[1];
-    playerSum = sumHand(playerHand, numPlayerCards);
+    manoJugador[NCartasJugador++] = baraja[0];
+    manoJugador[NCartasJugador++] = baraja[1];
+    sumJugador = sumMano(manoJugador, NCartasJugador);
 
     printf("Tus cartas:\n");
-    showCard(playerHand[0]);
-    showCard(playerHand[1]);
-    printf("Suma total: %d\n", playerSum);
+    mostrarCarta(manoJugador[0]);
+    mostrarCarta(manoJugador[1]);
+    printf("Suma total: %d\n", sumJugador);
 
-    while (playerSum < 21) {
-        printf("¿Quieres otra carta? (s/n): ");
-        scanf(" %c", &choice);
+    while (sumJugador < 21) {
+        printf("Quieres otra carta? (s/n): ");
+        scanf(" %c", &eleccion);
 
-        if (choice == 's' || choice == 'S') {
-            playerHand[numPlayerCards] = deck[numPlayerCards + 1];
-            playerSum = sumHand(playerHand, ++numPlayerCards);
+        if (eleccion == 's' || eleccion == 'S') {
+            manoJugador[NCartasJugador] = baraja[NCartasJugador + 1];
+            sumJugador = sumMano(manoJugador, ++NCartasJugador);
 
             printf("Nueva carta:\n");
-            showCard(playerHand[numPlayerCards - 1]);
-            printf("Suma total: %d\n", playerSum);
+            mostrarCarta(manoJugador[NCartasJugador - 1]);
+            printf("Suma total: %d\n", sumJugador);
         } else {
             break;
         }
     }
 
-    if (playerSum == 21) {
+    if (sumJugador == 21) {
         printf("¡Blackjack! Has ganado.\n");
-    } else if (playerSum > 21) {
+    } else if (sumJugador > 21) {
         printf("Te has pasado. Fin del juego.\n");
     } else {
-        printf("Te has plantado con %d. Fin del juego.\n", playerSum);
+        printf("Te has plantado con %d. Fin del juego.\n", sumJugador);
     }
 
     return 0;
