@@ -7,22 +7,24 @@
 #define MAX_MANO 10
 
 // Representación de las cartas
-char *valores[] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
-char *palos[] = {"Corazones", "Diamantes", "Picas", "Treboles"};
+const char *valores[] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+const char *palos[] = {"Corazones", "Diamantes", "Picas", "Treboles"};
 
-// Estructura para una carta
+//Estructura para una carta
 struct carta {
     char *valor;
     char *palo;
     int valorNumerico;
 };
 
+//Variables
 struct carta baraja[TOTAL_CARTAS];
 struct carta manoJugador[MAX_MANO];
 int NCartasJugador = 0;
 int sumJugador = 0;
 char eleccion;
 
+//Funcion: Iniciar Baraja
 void iniciarBaraja() {
     for (int i = 0; i < TOTAL_CARTAS; i++) {
         baraja[i].valor = valores[i % VALOR_CARTA];
@@ -33,6 +35,7 @@ void iniciarBaraja() {
     }
 }
 
+//Funcion: Barajar Baraja
 void barajarBaraja() {
     srand(time(NULL));
     for (int i = 0; i < TOTAL_CARTAS; i++) {
@@ -43,10 +46,12 @@ void barajarBaraja() {
     }
 }
 
+//Funcion: Mostrar Carta
 void mostrarCarta(struct carta c) {
     printf("  %s de %s\n", c.valor, c.palo);
 }
 
+//Suma el valor de las cartas que tienes
 int sumMano(struct carta mano[], int numCards) {
     int sum = 0;
     for (int i = 0; i < numCards; i++) {
@@ -56,24 +61,29 @@ int sumMano(struct carta mano[], int numCards) {
 }
 
 int main() {
+//Utilizamos la funcion para iniciar baraja y otra para barajarla
     iniciarBaraja();
     barajarBaraja();
 
     printf("Bienvenido al Blackjack!\n");
 
+//Asignamos la Carta al jugador
     manoJugador[NCartasJugador++] = baraja[0];
     manoJugador[NCartasJugador++] = baraja[1];
     sumJugador = sumMano(manoJugador, NCartasJugador);
 
+//Muestra sus cartas al jugador
     printf("Tus cartas:\n");
     mostrarCarta(manoJugador[0]);
     mostrarCarta(manoJugador[1]);
     printf("Suma total: %d\n", sumJugador);
 
+//Pregunta si quires cojer mas cartas
     while (sumJugador < 21) {
         printf("Quieres otra carta? (s/n): ");
         scanf(" %c", &eleccion);
 
+        //Si dice que si la añade una carta
         if (eleccion == 's' || eleccion == 'S') {
             manoJugador[NCartasJugador] = baraja[NCartasJugador + 1];
             sumJugador = sumMano(manoJugador, ++NCartasJugador);
@@ -86,6 +96,7 @@ int main() {
         }
     }
 
+//Resultados
     if (sumJugador == 21) {
         printf("¡Blackjack! Has ganado.\n");
     } else if (sumJugador > 21) {
